@@ -7,11 +7,11 @@
 
 namespace crow
 {
-    template <typename Handler, typename ... Middlewares>
+    template <typename Adaptor, typename Handler, typename ... Middlewares>
     class Connection;
     struct response
     {
-        template <typename Handler, typename ... Middlewares>
+        template <typename Adaptor, typename Handler, typename ... Middlewares>
         friend class crow::Connection;
 
         std::string body;
@@ -46,6 +46,10 @@ namespace crow
         }
         response(int code, std::string body) : body(std::move(body)), code(code) {}
         response(const json::wvalue& json_value) : body(json::dump(json_value)) 
+        {
+            json_mode();
+        }
+        response(int code, const json::wvalue& json_value) : code(code), body(json::dump(json_value))
         {
             json_mode();
         }
